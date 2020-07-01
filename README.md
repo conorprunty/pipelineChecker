@@ -2,7 +2,7 @@
 
 ### Instructions
 
-- clone `pr` and `pipelineChecker.py`
+- clone `pr`, `pipelineChecker.py` and `properties.py`
 - cd into folder they are in
 - run `./pr $PR_number`
 - checks if pipeline run is completed every n seconds
