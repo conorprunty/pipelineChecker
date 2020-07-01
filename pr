@@ -2,6 +2,8 @@
 
 prNum=$1
 
+curDir=$PWD
+
 osascript -e 'tell app "Terminal"
-   do script "python3 ./pipelineChecker.py '$prNum'"
+   do script "cd '$curDir' && python3 ./pipelineChecker.py '$prNum'"
 end tell'

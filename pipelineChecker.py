@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import time
+import properties
 from datetime import datetime
 from github import Github
 from webbot import Browser
@@ -12,8 +13,10 @@ def notify(message):
     os.system("osascript -e 'Tell application \"System Events\" to display dialog \"" + message + "\"'")
 
 
-user = "<github_username>"
-password = "<github_password>"
+user = properties.user
+password = properties.password
+repository = properties.repo
+delay = properties.delay
 
 if len(sys.argv) < 2:
     notify(message='No PR number passed as argument')
@@ -22,8 +25,10 @@ if len(sys.argv) < 2:
 prNum = sys.argv[1]
 
 g = Github(user, password)
-repo = g.get_repo("<path_to_repo>")
+repo = g.get_repo(repository)
 prTitle = repo.get_pull(int(prNum))
+
+fullPath = 'https://github.com/'+ repository + '/pull/' + prNum
 
 web = Browser()
 #web.driver.set_window_position(-10000, 0)
@@ -34,7 +39,7 @@ web.click('NEXT', tag='span')
 web.type(password, into='Password')
 web.click('Sign in', tag='span')
 print(prNum)
-web.go_to('https://github.com/<path_to_repo>/pull/' + prNum)
+web.go_to(fullPath)
 a = web.get_page_source()
 b = str(a)
 
@@ -45,7 +50,7 @@ if b.find("Subscribe to our newsletter") != -1:
     sys.exit(0)
 
 while True:
-    web.go_to('https://github.com/<path_to_repo>/pull/' + prNum)
+    web.go_to(fullPath)
     a = web.get_page_source()
     b = str(a)
     web.driver.minimize_window()
@@ -78,5 +83,5 @@ while True:
         notify(message='build %s may be completed or deleted, please check' % prNum)
         sys.exit(0)
 
-    time.sleep(60)
+    time.sleep(delay)
     continue
